@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.annotation.MultipartConfig;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -107,7 +108,7 @@ public class ProductController {
             existProduct.setDescription(product.getDescription());
             existProduct.setImageUrl(product.getImageUrl());
             existProduct.setUnitsInStock(product.getUnitsInStock());
-            existProduct.setLastUpdated(product.getLastUpdated());
+            existProduct.setLastUpdated(new Date());
             existProduct.setCategory(category);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not exist");

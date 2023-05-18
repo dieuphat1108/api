@@ -50,8 +50,6 @@ public class CategoryController {
         } else {
             throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, "Category already exits");
         }
-
-
     }
 
     @PutMapping("/update/{categoryId}") // Edit Category
