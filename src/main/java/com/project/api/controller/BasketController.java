@@ -36,6 +36,7 @@ public class BasketController {
     private final UserRepository userRepository;
 
     @Autowired
+
     public BasketController(ProductRepository productRepository,
                             BasketItemRepository basketItemRepository,
                             BasketRepository basketRepository, UserRepository userRepository) {
@@ -76,9 +77,9 @@ public class BasketController {
 
     @PostMapping("/{userId}")
     public ResponseEntity<BasketDto> addItemToBasket(@PathVariable("userId") Long userId,
-                                                    @RequestParam("quantity") int quantity,
-                                                    @RequestParam("productId") Long productId,
-                                                    HttpServletResponse response) {
+                                                     @RequestParam("quantity") int quantity,
+                                                     @RequestParam("productId") Long productId,
+                                                     HttpServletResponse response) {
         Product product = productRepository.findById(productId).get();
         User user = userRepository.findById(userId).get();
 

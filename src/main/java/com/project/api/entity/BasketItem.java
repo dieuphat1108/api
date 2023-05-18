@@ -31,11 +31,6 @@ public class BasketItem {
     public BasketItem() {
     }
 
-    public BasketItem(Product products, int quantity) {
-        this.products = products;
-        this.quantity = quantity;
-    }
-
     public BasketItem(Basket basket, Product products, int quantity) {
         this.basket = basket;
         this.products = products;

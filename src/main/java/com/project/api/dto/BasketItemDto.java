@@ -18,7 +18,6 @@ public class BasketItemDto {
 
     private int quantity;
 
-
     public BasketItemDto(Long productId, String name, BigDecimal price, String imageUrl, String category, int quantity) {
         this.productId = productId;
         this.name = name;

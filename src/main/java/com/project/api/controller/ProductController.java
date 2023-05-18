@@ -6,28 +6,23 @@ import com.project.api.dto.ProductDto;
 import com.project.api.dto.ProductRequest;
 import com.project.api.entity.Category;
 import com.project.api.entity.Product;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.annotation.MultipartConfig;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/products")
 @CrossOrigin("http://localhost:3000")
 public class ProductController {
 
     private ProductRepository productRepository;
     private CategoryRepository categoryRepository;
-
     private FileController fileController;
 
     @Autowired
@@ -35,7 +30,7 @@ public class ProductController {
                              CategoryRepository categoryRepository,
                              FileController fileController) {
         this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
+        // this.categoryRepository = categoryRepository;
         this.fileController = fileController;
     }
 

@@ -9,15 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.xml.ws.Response;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("api/file")
@@ -50,26 +46,6 @@ public class FileController {
             return new ResponseEntity<>(message, HttpStatus.EXPECTATION_FAILED);
         }
     }
-
-//    public String uploadFile(MultipartFile file) {
-//        try {
-//            Path uploadDir = Paths.get("upload/image");
-//            if (!Files.exists(uploadDir)) {
-//                Files.createDirectories(uploadDir);
-//            }
-//            Path filePath = uploadDir.resolve(file.getOriginalFilename());
-//            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-//
-//            String imageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                    .path("/upload/image")
-//                    .path(file.getOriginalFilename())
-//                    .toUriString();
-//            return imageUrl;
-//        } catch (Exception e) {
-//            throw new RuntimeException("Failed to upload image", e);
-//        }
-//
-//    }
 
     @DeleteMapping(value = "/image/{filename}") // Delete Image
     public ResponseEntity<Boolean> deleteFile(@PathVariable String filename) throws IOException {
