@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -62,8 +63,7 @@ public class ProductController {
 
     @PostMapping("/add") // Insert/Add Product
     public ResponseEntity<Product> createProduct(@RequestBody ProductRequest product) {
-        Long categoryId = product.getCategoryId();
-        Category category = categoryRepository.findById(categoryId).get();
+        Category category = categoryRepository.findById(product.getCategoryId()).get();
 
         Product existProduct = productRepository.findByName(product.getName());
 
@@ -77,11 +77,6 @@ public class ProductController {
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         } else {
             Product newProduct = new Product();
-            newProduct.setName(product.getName());
-            newProduct.setDescription(product.getDescription());
-            newProduct.setPrice(product.getPrice());
-            newProduct.setImageUrl(product.getImageUrl());
-            newProduct.setUnitsInStock(product.getUnitsInStock());
             newProduct.setCategory(category);
 
             Product savedProduct = productRepository.save(newProduct);
