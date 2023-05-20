@@ -6,6 +6,7 @@ import com.project.api.dto.ProductDto;
 import com.project.api.dto.ProductRequest;
 import com.project.api.entity.Category;
 import com.project.api.entity.Product;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class ProductController {
                              CategoryRepository categoryRepository,
                              FileController fileController) {
         this.productRepository = productRepository;
-        // this.categoryRepository = categoryRepository;
+        this.categoryRepository = categoryRepository;
         this.fileController = fileController;
     }
 
@@ -62,7 +63,7 @@ public class ProductController {
     }
 
     @PostMapping("/add") // Insert/Add Product
-    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest product) {
+    public ResponseEntity<Product> createProduct(@RequestBody @NotNull ProductRequest product) {
         Category category = categoryRepository.findById(product.getCategoryId()).get();
 
         Product existProduct = productRepository.findByName(product.getName());
@@ -77,6 +78,11 @@ public class ProductController {
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         } else {
             Product newProduct = new Product();
+            newProduct.setName(product.getName());
+            newProduct.setPrice(product.getPrice());
+            newProduct.setDescription(product.getDescription());
+            newProduct.setImageUrl(product.getImageUrl());
+            newProduct.setUnitsInStock(product.getUnitsInStock());
             newProduct.setCategory(category);
 
             Product savedProduct = productRepository.save(newProduct);
@@ -87,8 +93,7 @@ public class ProductController {
     @PutMapping("/update/{productId}") // Edit Product
     public ResponseEntity<Product> updateProduct(@RequestBody ProductRequest product,
                                                  @PathVariable("productId") Long productId) {
-        Long categoryId = product.getCategoryId();
-        Category category = categoryRepository.findById(categoryId).get();
+        Category category = categoryRepository.findById(product.getCategoryId()).get();
 
         Product existProduct = productRepository.findById(productId).get();
 
