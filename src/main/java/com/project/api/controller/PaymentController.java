@@ -21,6 +21,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class PaymentController {
 	int userId;
 	int orderId;
