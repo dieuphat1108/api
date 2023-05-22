@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("api/file")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin({"http://localhost:3000"})
 public class FileController {
 
     @GetMapping(value = "/image/{filename}", produces = MediaType.IMAGE_JPEG_VALUE) // Display Image

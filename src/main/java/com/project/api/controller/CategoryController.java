@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/category")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin({"http://localhost:3000"})
 public class CategoryController {
 
     private CategoryRepository categoryRepository;
