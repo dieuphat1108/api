@@ -2,6 +2,7 @@ package com.project.api.controller;
 
 import com.project.api.ResponseObject;
 import com.project.api.dao.RegisterRepository;
+import com.project.api.dao.UserRepository;
 import com.project.api.dto.RegisterDto;
 import com.project.api.dto.UpdateUserDto;
 import com.project.api.entity.Register;
@@ -21,7 +22,15 @@ public class RegisterController {
 
     @Autowired
     private RegisterRepository registerRepository;
+    @Autowired
+    UserRepository userRepository;
 
+    @GetMapping("/get-all-user")
+    public ResponseEntity<ResponseObject> getAllUser() {
+        return new ResponseEntity<>(
+                new ResponseObject("success", userRepository.findAll(), "Thành công"),
+                HttpStatus.OK);
+    }
     @PostMapping("/register")
     public ResponseObject Register(@RequestBody Register register) {
         register.setPassword(bCryptPasswordEncoder.encode(register.getPassword()));
@@ -34,7 +43,6 @@ public class RegisterController {
         Register listResult = registerRepository.findById(register.getId()).get();
         if (listResult != null) {
             Register updateUser = new Register();
-
             updateUser.setId(listResult.getId());
             updateUser.setEmail(listResult.getEmail());
             updateUser.setFirstName(listResult.getFirstName());
@@ -52,7 +60,7 @@ public class RegisterController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseObject> Login(@RequestBody Register register) {
+    public Object Login(@RequestBody Register register) {
 
         List<Register> listResult = registerRepository.findByEmail(register.getEmail());
         if (listResult.size() == 0) {
@@ -61,7 +69,7 @@ public class RegisterController {
                     HttpStatus.BAD_REQUEST);
 
         } else {
-            if (!listResult.get(0).getStatus().equals("INACTIVE")) {
+            if (listResult.get(0).getStatus() == null || listResult.get(0).getStatus().equals("ACTIVE")) {
                 Boolean check = bCryptPasswordEncoder.matches(register.getPassword(), listResult.get(0).getPassword());
 
                 if (check == false) {
@@ -85,8 +93,8 @@ public class RegisterController {
                 }
             } else {
                 return new ResponseEntity<>(
-                        new ResponseObject("success", null, "Tài khoản đã bị khóa."),
-                        HttpStatus.OK);
+                        new ResponseObject("success", null, "Tài khoản đã bị khóa.Vui lòng liên hệ với Admin"),
+                        HttpStatus.BAD_REQUEST);
             }
         }
 
