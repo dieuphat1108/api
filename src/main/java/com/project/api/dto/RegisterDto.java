@@ -14,4 +14,6 @@ public class RegisterDto {
     private String phone;
     private String address;
     private String role;
+    private String status;
+    
 }
