@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -24,7 +25,7 @@ import java.util.Date;
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class PaymentController {
 	int userId;
-	int orderId;
+	Double total;
 	public static final String PAYPAL_SUCCESS_URL = "pay/success";
 	public static final String PAYPAL_CANCEL_URL = "pay/cancel";
 
@@ -36,20 +37,15 @@ public class PaymentController {
 	@Autowired
 	UserRepository userRepository;
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String index() {
-		return "index";
-	}
-
 	@RequestMapping(method = RequestMethod.POST, value = "pay")
 	public String pay(HttpServletRequest request, @RequestBody PaymentDto paymentDto) {
 		userId = paymentDto.getUserId();
-		orderId = paymentDto.getOrderId();
+		total = paymentDto.getTotal();
 		String cancelUrl = URLUtils.getBaseURl(request) + "/" + PAYPAL_CANCEL_URL;
 		String successUrl = URLUtils.getBaseURl(request) + "/" + PAYPAL_SUCCESS_URL;
 		try {
 			Payment payment = paypalService.createPayment(
-					300.0,
+					paymentDto.getTotal(),
 					"USD",
 					PaypalPaymentMethod.paypal,
 					PaypalPaymentIntent.sale,
@@ -58,7 +54,7 @@ public class PaymentController {
 					successUrl);
 			for (Links links : payment.getLinks()) {
 				if (links.getRel().equals("approval_url")) {
-					return "redirect:" + links.getHref();
+					return links.getHref();
 				}
 			}
 		} catch (PayPalRESTException e) {
@@ -73,7 +69,8 @@ public class PaymentController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = PAYPAL_SUCCESS_URL)
-	public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+	public RedirectView successPay(@RequestParam("paymentId") String paymentId,
+			@RequestParam("PayerID") String payerId) {
 		try {
 			Payment payment = paypalService.executePayment(paymentId, payerId);
 			if (payment.getState().equals("approved")) {
@@ -81,14 +78,18 @@ public class PaymentController {
 				PaymentEntity paymentEntity = new PaymentEntity();
 				paymentEntity.setUserId(userId);
 				paymentEntity.setPaymentDate(datePay);
-				paymentEntity.setAmount(200);
+				paymentEntity.setAmount(total);
 				paymentRepository.save(paymentEntity);
-				return "Điều hướng về link local";
+				RedirectView redirectView = new RedirectView();
+				redirectView.setUrl("http://localhost:3000");
+				return redirectView;
 			}
 		} catch (PayPalRESTException e) {
 			log.error(e.getMessage());
 		}
-		return "redirect:/";
+		RedirectView redirectView = new RedirectView();
+		redirectView.setUrl("http://localhost:3000");
+		return redirectView;
 	}
 
 }
