@@ -6,7 +6,7 @@ import com.project.api.dto.ProductDto;
 import com.project.api.dto.ProductRequest;
 import com.project.api.entity.Category;
 import com.project.api.entity.Product;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
+// import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -15,19 +15,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.annotation.MultipartConfig;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+@CrossOrigin(origins = "http://localhost:3000",allowedHeaders = "*", allowCredentials = "true")
 @RestController
-@RequestMapping("/api/product")
-@CrossOrigin("http://localhost:3000")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private ProductRepository productRepository;
     private CategoryRepository categoryRepository;
-
     private FileController fileController;
 
     @Autowired
@@ -97,19 +96,14 @@ public class ProductController {
     @PutMapping("/update/{productId}") // Edit Product
     public ResponseEntity<Product> updateProduct(@RequestBody ProductRequest product,
                                                  @PathVariable("productId") Long productId) {
-        Long categoryId = product.getCategoryId();
-        Category category = categoryRepository.findById(categoryId).get();
-
         Product existProduct = productRepository.findById(productId).get();
 
         if (existProduct != null) {
             existProduct.setName(product.getName());
             existProduct.setPrice(product.getPrice());
             existProduct.setDescription(product.getDescription());
-            existProduct.setImageUrl(product.getImageUrl());
             existProduct.setUnitsInStock(product.getUnitsInStock());
             existProduct.setLastUpdated(new Date());
-            existProduct.setCategory(category);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not exist");
         }

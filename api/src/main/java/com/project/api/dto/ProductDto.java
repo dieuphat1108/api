@@ -1,12 +1,14 @@
 package com.project.api.dto;
 
 import com.project.api.entity.Product;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 public class ProductDto {
     private Long id;
 

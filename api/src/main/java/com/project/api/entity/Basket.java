@@ -6,8 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -20,33 +18,11 @@ public class Basket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BasketItem> basketItems;
-
-    public void addItem(Product product, int quantity) {
-        if (product != null) {
-            if (basketItems == null) {
-                basketItems = new HashSet<>();
-            }
-
-            BasketItem existingItem = basketItems.stream()
-                    .filter(item -> item.getProducts().getId().equals(product.getId()))
-                    .findAny()
-                    .orElse(null);
-
-            if (existingItem != null) {
-                int newQuantity = existingItem.getQuantity() + quantity;
-                existingItem.setQuantity(newQuantity);
-            } else {
-                basketItems.add(new BasketItem(this, product, quantity));
-            }
-        }
-    }
 
     public Basket() {
     }
@@ -60,7 +36,6 @@ public class Basket {
         return "Basket{" +
                 "id=" + id +
                 ", user=" + user +
-                ", basketItems=" + basketItems +
                 '}';
     }
 }
