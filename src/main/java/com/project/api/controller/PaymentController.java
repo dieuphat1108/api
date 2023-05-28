@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-
+//fix pull
 @RestController
 @RequestMapping("/")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
