@@ -51,7 +51,12 @@ public class BasketController {
         List<Basket> basketList = basketRepository.findByUser(user);
 
         if (basketList.isEmpty()) {
-            throw new NoResultException("Can't found the basket");
+            Basket bs = new Basket();
+            bs.setUser(user);
+            basketRepository.save(bs);
+            BasketDto basketDto = new BasketDto();
+            basketDto.setEmail(basketList.get(0).getUser().getEmail());
+            return new ResponseEntity<>(basketDto, HttpStatus.OK);
         }
         List<BasketItemDto> basketItemDtoList = basketItemRepository.findByBasketId(basketList.get(0).getId()).stream().map(item -> new BasketItemDto(
                         item.getProducts().getId(),

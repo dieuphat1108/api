@@ -36,7 +36,7 @@ public class FileController {
         }
     }
 
-    @PostMapping("/upload") // Upload Image (front-end need call this api if want upload file)
+    @PostMapping(value = "/upload", consumes = {"multipart/form-data"}) // Upload Image (front-end need call this api if want upload file)
     public ResponseEntity<String> uploadFile(@RequestParam("imageUrl") MultipartFile file) {
         String message;
 
