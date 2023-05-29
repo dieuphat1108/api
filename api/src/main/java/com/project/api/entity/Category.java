@@ -20,7 +20,7 @@ public class Category {
     @Column(name = "category_name")
     private String categoryName;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
     private Set<Product> products;
 
     public Category() {
@@ -37,9 +37,7 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", categoryName='" + categoryName + '\'' +
-                '}';
-    }
+        return "Category [id=" + id + ", categoryName=" + categoryName +  ", products=" + products
+                + "]";
+    }    
 }
