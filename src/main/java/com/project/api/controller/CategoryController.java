@@ -11,9 +11,9 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.persistence.NoResultException;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000",allowedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("api/category")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class CategoryController {
 
     private CategoryRepository categoryRepository;
@@ -34,7 +34,7 @@ public class CategoryController {
         Category category = categoryRepository.findById(categoryId).get();
 
         if (category == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This category not exists");
+            throw new NoResultException("This category not exists");
         }
 
         return new ResponseEntity<>(category, HttpStatus.OK);

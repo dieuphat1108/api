@@ -1,8 +1,6 @@
 package com.project.api.dto;
-
-import lombok.Data;
-
 import javax.persistence.Column;
+import lombok.Data;
 @Data
 public class RegisterDto {
     private Long id;
@@ -14,6 +12,4 @@ public class RegisterDto {
     private String phone;
     private String address;
     private String role;
-    private String status;
-    
 }

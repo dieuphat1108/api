@@ -6,21 +6,23 @@ import com.project.api.dto.ProductDto;
 import com.project.api.dto.ProductRequest;
 import com.project.api.entity.Category;
 import com.project.api.entity.Product;
-import org.jetbrains.annotations.NotNull;
+// import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+@CrossOrigin(origins = "http://localhost:3000",allowedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class ProductController {
 
     private ProductRepository productRepository;
@@ -63,8 +65,9 @@ public class ProductController {
     }
 
     @PostMapping("/add") // Insert/Add Product
-    public ResponseEntity<Product> createProduct(@RequestBody @NotNull ProductRequest product) {
-        Category category = categoryRepository.findById(product.getCategoryId()).get();
+    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest product) {
+        Long categoryId = product.getCategoryId();
+        Category category = categoryRepository.findById(categoryId).get();
 
         Product existProduct = productRepository.findByName(product.getName());
 
@@ -79,8 +82,8 @@ public class ProductController {
         } else {
             Product newProduct = new Product();
             newProduct.setName(product.getName());
-            newProduct.setPrice(product.getPrice());
             newProduct.setDescription(product.getDescription());
+            newProduct.setPrice(product.getPrice());
             newProduct.setImageUrl(product.getImageUrl());
             newProduct.setUnitsInStock(product.getUnitsInStock());
             newProduct.setCategory(category);
@@ -93,18 +96,14 @@ public class ProductController {
     @PutMapping("/update/{productId}") // Edit Product
     public ResponseEntity<Product> updateProduct(@RequestBody ProductRequest product,
                                                  @PathVariable("productId") Long productId) {
-        Category category = categoryRepository.findById(product.getCategoryId()).get();
-
         Product existProduct = productRepository.findById(productId).get();
 
         if (existProduct != null) {
             existProduct.setName(product.getName());
             existProduct.setPrice(product.getPrice());
             existProduct.setDescription(product.getDescription());
-            existProduct.setImageUrl(product.getImageUrl());
             existProduct.setUnitsInStock(product.getUnitsInStock());
             existProduct.setLastUpdated(new Date());
-            existProduct.setCategory(category);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not exist");
         }

@@ -31,14 +31,14 @@ public class User {
     private String address;
 
     private String role;
-    private String status;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private Set<Basket> baskets;
 
     public User() {
     }
 
-    public User(Long id, String email, String password, String firstName, String lastName, int phone, String address, String role,String status) {
+    public User(Long id, String email, String password, String firstName, String lastName, int phone, String address, String role) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -47,16 +47,19 @@ public class User {
         this.phone = phone;
         this.address = address;
         this.role = role;
-        this.status = status;
-        
     }
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", email=" + email + ", password=" + password + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", phone=" + phone + ", address=" + address + ", role=" + role
-                + ", status=" + status + ", baskets=" + baskets + "]";
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone=" + phone +
+                ", address='" + address + '\'' +
+                ", role='" + role + '\'' +
+                '}';
     }
-
-   
 }

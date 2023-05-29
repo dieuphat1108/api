@@ -1,8 +1,13 @@
 package com.project.api.entity;
 
-import lombok.Data;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import javax.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "users")
@@ -20,5 +25,4 @@ public class Register {
     private String phone;
     private String address;
     private String role;
-    private String status;
 }

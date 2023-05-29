@@ -5,10 +5,13 @@ import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import com.project.api.config.PaypalPaymentIntent;
 import com.project.api.config.PaypalPaymentMethod;
+import com.project.api.dao.BasketRepository;
 import com.project.api.dao.PaymentRepository;
 import com.project.api.dao.UserRepository;
 import com.project.api.dto.PaymentDto;
+import com.project.api.entity.Basket;
 import com.project.api.entity.PaymentEntity;
+import com.project.api.entity.User;
 import com.project.api.service.PaypalService;
 import com.project.api.util.URLUtils;
 import org.slf4j.Logger;
@@ -19,6 +22,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
+
 //fix pull
 @RestController
 @RequestMapping("/")
@@ -36,6 +41,8 @@ public class PaymentController {
 	private PaypalService paypalService;
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	BasketRepository basketRepository;
 
 	@RequestMapping(method = RequestMethod.POST, value = "pay")
 	public String pay(HttpServletRequest request, @RequestBody PaymentDto paymentDto) {
@@ -70,7 +77,7 @@ public class PaymentController {
 
 	@RequestMapping(method = RequestMethod.GET, value = PAYPAL_SUCCESS_URL)
 	public RedirectView successPay(@RequestParam("paymentId") String paymentId,
-			@RequestParam("PayerID") String payerId) {
+								   @RequestParam("PayerID") String payerId) {
 		try {
 			Payment payment = paypalService.executePayment(paymentId, payerId);
 			if (payment.getState().equals("approved")) {
@@ -80,6 +87,9 @@ public class PaymentController {
 				paymentEntity.setPaymentDate(datePay);
 				paymentEntity.setAmount(total);
 				paymentRepository.save(paymentEntity);
+				//remove basket
+				List<Basket> basket = basketRepository.findByUserId((long)userId);
+				basketRepository.delete(basket.get(0));
 				RedirectView redirectView = new RedirectView();
 				redirectView.setUrl("http://localhost:3000");
 				return redirectView;

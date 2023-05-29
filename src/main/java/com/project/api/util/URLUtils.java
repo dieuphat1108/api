@@ -1,6 +1,5 @@
 package com.project.api.util;
 import javax.servlet.http.HttpServletRequest;
-
 public class URLUtils {
 
 	public static String getBaseURl(HttpServletRequest request) {

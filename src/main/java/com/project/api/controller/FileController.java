@@ -9,15 +9,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+// import javax.xml.ws.Response;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
+@CrossOrigin(origins = "http://localhost:3000",allowedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("api/file")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class FileController {
 
     @GetMapping(value = "/image/{filename}", produces = MediaType.IMAGE_JPEG_VALUE) // Display Image
@@ -32,7 +36,7 @@ public class FileController {
         }
     }
 
-    @PostMapping("/upload") // Upload Image (front-end need call this api if want upload file)
+    @PostMapping(value = "/upload", consumes = {"multipart/form-data"}) // Upload Image (front-end need call this api if want upload file)
     public ResponseEntity<String> uploadFile(@RequestParam("imageUrl") MultipartFile file) {
         String message;
 
