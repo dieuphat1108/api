@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_name VARCHAR(255) NOT NULL,
     phone INT(12) NOT NULL,
     address VARCHAR(255) NOT NULL,
+    status VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL,
     PRIMARY KEY (id)
 );
