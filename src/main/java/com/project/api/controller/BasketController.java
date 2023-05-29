@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.persistence.NoResultException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -53,9 +54,10 @@ public class BasketController {
         if (basketList.isEmpty()) {
             Basket bs = new Basket();
             bs.setUser(user);
-            basketRepository.save(bs);
-            BasketDto basketDto = new BasketDto();
-            basketDto.setEmail(basketList.get(0).getUser().getEmail());
+            bs = basketRepository.save(bs);
+            BasketDto basketDto = convert(bs,new ArrayList<>());
+            basketDto.setEmail(user.getEmail());
+
             return new ResponseEntity<>(basketDto, HttpStatus.OK);
         }
         List<BasketItemDto> basketItemDtoList = basketItemRepository.findByBasketId(basketList.get(0).getId()).stream().map(item -> new BasketItemDto(
